@@ -5,7 +5,7 @@ import Carousel from 'react-bootstrap/Carousel';
 import Card from 'react-bootstrap/Card';
 import { Image } from 'react-bootstrap';
 
-export default function RoomPostModal() {
+export default function RoomPostCard() {
   return (
     <Card style={{ width: '18rem' }} >
       <Carousel slide={false} >

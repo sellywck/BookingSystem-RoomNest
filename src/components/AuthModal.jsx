@@ -62,13 +62,7 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
-      if (res.user) {
-        onHide();
-        toast.success("Login successfully", {
-          autoClose: 2000,
-          position: "bottom-right",
-        });
-      }
+      handleUserAuth(res);
     } catch (error) {
       handleAuthError(error);
     }
@@ -83,11 +77,12 @@ export default function AuthModal({ show, onHide }) {
   };
 
   const GoogleProvider = new GoogleAuthProvider();
+
   const handleGoogleLogin = async (e) => {
     e.preventDefault();
     try {
       const res = await signInWithPopup(auth, GoogleProvider);
-      handleUserCreation(res);
+      handleUserAuth(res);
     } catch (error) {
       handleAuthError(error);
     }
@@ -96,7 +91,8 @@ export default function AuthModal({ show, onHide }) {
   const handleGoogleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const res = await signInWithPopup(auth, GoogleAuthProvider);
+      const res = await signInWithPopup(auth, GoogleProvider);
+      handleUserCreation(res);
       console.log(res);
     } catch (error) {
       handleAuthError;
@@ -104,12 +100,24 @@ export default function AuthModal({ show, onHide }) {
   };
 
   const FacebookProvider = new FacebookAuthProvider();
-  const handleFacebookLogin = async (e) => {
+  const handleFacebookSignUp = async (e) => {
     e.preventDefault();
     try {
       const res = await signInWithPopup(auth, FacebookProvider);
       handleUserCreation(res);
     } catch (error) {
+      console.log(error)
+      handleAuthError(error);
+    }
+  };
+
+  const handleFacebookLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await signInWithPopup(auth, FacebookProvider);
+      handleUserAuth(res);
+    } catch (error) {
+      console.log(error)
       handleAuthError(error);
     }
   };
@@ -128,6 +136,21 @@ export default function AuthModal({ show, onHide }) {
       onHide();
     }
   }
+  async function handleUserAuth(res) {
+    console.log("handleUserAuth", res);
+    if (res.user) {
+      const { uid, email } = res.user;
+
+      await axios.post(`${BASE_URL}/v1/login`, { uid, email });
+
+      toast.success("Account login successfully", {
+        autoClose: 2000,
+        position: "bottom-right",
+      });
+      onHide();
+    }
+  }
+
 
 
   function handleAuthError(error) {
@@ -271,8 +294,17 @@ export default function AuthModal({ show, onHide }) {
                 with Google
               </Button>
             )}
-
-            <Button
+            {show === "signup" ? (
+              <Button
+              className="mb-3 rounded-pill"
+              variant="outline-dark"
+              style={{ width: "100%" }}
+              onClick={handleFacebookSignUp}
+            >
+              <img alt="Continue with Facebook" src={facebookIcon} /> Continue
+              with Facebook
+            </Button>
+            ) : (<Button
               className="mb-3 rounded-pill"
               variant="outline-dark"
               style={{ width: "100%" }}
@@ -280,7 +312,8 @@ export default function AuthModal({ show, onHide }) {
             >
               <img alt="Continue with Facebook" src={facebookIcon} /> Continue
               with Facebook
-            </Button>
+            </Button>)}
+            
             {/* <Button
               className="mb-3 rounded-pill"
               variant="outline-dark"

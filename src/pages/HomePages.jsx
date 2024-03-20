@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import RoomPostModal from "../components/RoomPostModal";
+import RoomPostHome from "../components/RoomPostHome";
 
 export default function HomePages() {
   return (
@@ -7,16 +7,7 @@ export default function HomePages() {
       <Container className="mainView">
         <Row>
           <Col>
-            <RoomPostModal />
-          </Col>
-          <Col>
-            <RoomPostModal />
-          </Col>
-          <Col>
-            <RoomPostModal />
-          </Col>
-          <Col>
-            <RoomPostModal />
+          <RoomPostHome/>
           </Col>
         </Row>
       </Container>
