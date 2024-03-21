@@ -9,8 +9,12 @@ import {
 } from "firebase/auth";
 import { Button, Modal, Form } from "react-bootstrap";
 import { useState } from "react";
+// import { useContext } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+// import { useContext, useEffect, useState } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { AuthContext } from "./AuthProvider";
 
 const googleIcon =
   "https://cdn.pgimgs.com/hive-ui/static/v0.1.99/logo/google.svg";
@@ -22,7 +26,14 @@ const BASE_URL =
 export default function AuthModal({ show, onHide }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const navigate = useNavigate();
   const auth = getAuth();
+  // const {userLoggedIn} = useContext(AuthContext)
+  // const {currentUser} = useContext(AuthContext)
+
+  // useEffect(()=> {
+  //   if(currentUser) navigate("/")
+  // }, [currentUser, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,20 +52,8 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      if (res.user) {
-        const { uid, email } = res.user;
-        await axios.post(`${BASE_URL}/v1/signup`, {
-          uid,
-          email,
-        });
-        toast.success("Account registered successfully", {
-          autoClose: 2000,
-          position: "top-center",
-        });
-        onHide();
-      }
+      await handleUserCreation(res);
     } catch (error) {
-      alert(error);
       handleAuthError(error);
     }
   };
@@ -63,16 +62,7 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
-      if (res.user) {
-        const { uid, email } = res.user;
-        await axios.post(`${BASE_URL}/v1/login`, { uid, email });
-        toast.success("User logged in successfully", {
-          autoClose: 2000,
-          position: "top-center",
-        });
-
-        onHide();
-      }
+      handleUserAuth(res);
     } catch (error) {
       handleAuthError(error);
     }
@@ -94,8 +84,10 @@ export default function AuthModal({ show, onHide }) {
       const res = await signInWithPopup(auth, GoogleProvider);
       if (res.user) {
         const { uid, email } = res.user;
-        await axios.post(`${BASE_URL}/v1/login/sso`, { uid, email });
-        toast.success("User logged in successfully!", {
+  
+        await axios.post(`${BASE_URL}/v1/login`, { uid, email });
+  
+        toast.success("Account login successfully", {
           autoClose: 2000,
           position: "top-center",
         });
@@ -110,17 +102,10 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await signInWithPopup(auth, GoogleProvider);
-      if (res.user) {
-        const { uid, email } = res.user;
-        await axios.post(`${BASE_URL}/v1/login/sso`, { uid, email });
-        toast.success("User logged in successfully!", {
-          autoClose: 2000,
-          position: "top-center",
-        });
-        onHide();
-      }
+      handleUserCreation(res);
+      console.log(res);
     } catch (error) {
-      handleAuthError(error);
+      handleAuthError (error);
     }
   };
 
@@ -129,17 +114,9 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await signInWithPopup(auth, FacebookProvider);
-      if (res.user) {
-        const { uid, email } = res.user;
-        await axios.post(`${BASE_URL}/v1/login/sso`, { uid, email });
-        toast.success("User logged in successfully!", {
-          autoClose: 2000,
-          position: "top-center",
-        });
-        onHide();
-      }
+      handleUserCreation(res);
     } catch (error) {
-      console.log(error);
+      console.log(error)
       handleAuthError(error);
     }
   };
@@ -150,19 +127,60 @@ export default function AuthModal({ show, onHide }) {
       const res = await signInWithPopup(auth, FacebookProvider);
       if (res.user) {
         const { uid, email } = res.user;
-        await axios.post(`${BASE_URL}/v1/login/sso`, { uid, email });
-        toast.success("User logged in successfully", {
+  
+        await axios.post(`${BASE_URL}/v1/login`, { uid, email });
+  
+        toast.success("Account login successfully", {
           autoClose: 2000,
           position: "top-center",
         });
         onHide();
       }
     } catch (error) {
-      console.log(error);
-      console.error(error);
+      console.log(error)
+      console.error(error)
       handleAuthError(error);
     }
   };
+
+  async function handleUserCreation(res) {
+    console.log("handleUserCreation", res);
+    if (res.user) {
+      const { uid, email } = res.user;
+
+      await axios.post(`${BASE_URL}/v1/signup`, { uid, email });
+
+      if(Response.status === 400){
+        toast.error("Email already registered! ", {
+          autoClose: 2000,
+          position: "top-center",
+        });
+      } else {
+        toast.success("Account registered successfully", {
+          autoClose: 2000,
+          position: "top-center",
+        });
+        onHide();
+      }
+    }
+  }
+
+  async function handleUserAuth(res) {
+    console.log("handleUserAuth", res);
+    if (res.user) {
+      const { uid, email } = res.user;
+
+    await axios.post(`${BASE_URL}/v1/login`, { uid, email });
+
+      toast.success("Account login successfully", {
+        autoClose: 2000,
+        position: "top-center",
+      });
+      onHide();
+    }
+  }
+
+
 
   function handleAuthError(error) {
     console.error("Authentication error: ", error);
@@ -198,24 +216,12 @@ export default function AuthModal({ show, onHide }) {
         });
         break;
 
-      case "auth/account-exists-with-different-credential":
-        toast.error(
-          "An account already exists with a different credential for this email address.",
-          {
-            autoClose: 3000,
-            position: "top-center",
-          }
-        );
-        break;
-      case "auth/user-not-found":
-        toast.error(
-          "User not registered. Please proceed to sign up a new account.",
-          {
-            autoClose: 3000,
-            position: "top-center",
-          }
-        );
-        break;
+      case "auth/account-exists-with-different-credential" :
+      toast.error("An account already exists with a different credential for this email address.", {
+        autoClose: 3000,
+        position: "top-center",
+      });
+      break;
 
       default:
         toast.error("An error occurred. Please try again later.", {
@@ -326,26 +332,24 @@ export default function AuthModal({ show, onHide }) {
             )}
             {show === "signup" ? (
               <Button
-                className="mb-3 rounded-pill"
-                variant="outline-dark"
-                style={{ width: "100%" }}
-                onClick={handleFacebookSignUp}
-              >
-                <img alt="Continue with Facebook" src={facebookIcon} /> Continue
-                with Facebook
-              </Button>
-            ) : (
-              <Button
-                className="mb-3 rounded-pill"
-                variant="outline-dark"
-                style={{ width: "100%" }}
-                onClick={handleFacebookLogin}
-              >
-                <img alt="Continue with Facebook" src={facebookIcon} /> Continue
-                with Facebook
-              </Button>
-            )}
-
+              className="mb-3 rounded-pill"
+              variant="outline-dark"
+              style={{ width: "100%" }}
+              onClick={handleFacebookSignUp}
+            >
+              <img alt="Continue with Facebook" src={facebookIcon} /> Continue
+              with Facebook
+            </Button>
+            ) : (<Button
+              className="mb-3 rounded-pill"
+              variant="outline-dark"
+              style={{ width: "100%" }}
+              onClick={handleFacebookLogin}
+            >
+              <img alt="Continue with Facebook" src={facebookIcon} /> Continue
+              with Facebook
+            </Button>)}
+            
             {/* <Button
               className="mb-3 rounded-pill"
               variant="outline-dark"

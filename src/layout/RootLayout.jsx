@@ -80,14 +80,15 @@ export default function RootLayout() {
                 <Nav.Link className="navlink" href="appointment">
                   Appointment
                 </Nav.Link>
-
-                <Button
-                  style={{ fontSize: "16px" }}
-                  variant="danger"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
+                {currentUser && (
+                  <Button
+                    style={{ fontSize: "16px" }}
+                    variant="danger"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                )}
               </Nav>
             </Offcanvas.Body>
           </Navbar.Offcanvas>
