@@ -2,8 +2,8 @@ import { Button, Container, Spinner } from "react-bootstrap";
 import RoomPostCard from "./RoomPostCard";
 import { useDispatch, useSelector } from "react-redux";
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "./AuthProvider";
-import { fetchRooms } from "../features/rooms/roomsSlice";
+import { AuthContext } from "../userAuthentication/AuthProvider";
+import { fetchRooms } from "../../features/rooms/roomsSlice";
 import AddNewRoomModal from "./AddNewRoomModal";
 
 export default function RoomPostHome() {
@@ -45,20 +45,23 @@ export default function RoomPostHome() {
         </>
       )}
 
-      <Container className="d-flex-row items-align-center" style={{width: "60%", justifyContent: "center"}} >
+      <Container
+        className="d-flex-row items-align-center"
+        style={{ width: "60%", justifyContent: "center" }}
+      >
         {rooms.length > 0 ? (
           rooms.map((room) => (
             <>
-                  <RoomPostCard
-                    key={room.id}
-                    roomId={room.id}
-                    title={room.title}
-                    description={room.description}
-                    price={room.price}
-                    photo={room.photo}
-                    currentUser={currentUser}
-                    isAdmin={identity && identity.is_admin}
-                  />
+              <RoomPostCard
+                key={room.id}
+                roomId={room.id}
+                title={room.title}
+                description={room.description}
+                price={room.price}
+                photo={room.photo}
+                currentUser={currentUser}
+                isAdmin={identity && identity.is_admin}
+              />
             </>
           ))
         ) : (

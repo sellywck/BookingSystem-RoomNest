@@ -1,10 +1,10 @@
 import { Navbar, Container, Nav, Button, Offcanvas } from "react-bootstrap";
 import { motion } from "framer-motion"; // Import motion from Framer Motion
 import { Outlet, useNavigate } from "react-router-dom";
-import AuthModal from "../components/AuthModal";
+import AuthModal from "../components/userAuthentication/AuthModal";
 import { useContext, useState } from "react";
 import { getAuth } from "firebase/auth";
-import { AuthContext } from "../components/AuthProvider";
+import { AuthContext } from "../components/userAuthentication/AuthProvider";
 
 export default function RootLayout() {
   const [modalShow, setModalShow] = useState(null);
@@ -21,7 +21,7 @@ export default function RootLayout() {
     navigate("/");
   };
 
-  const { currentUser, identity } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <>
@@ -71,8 +71,8 @@ export default function RootLayout() {
                 </Nav.Link>
                 {currentUser ? (
                   <>
-                    <Nav.Link className="navlink" href="appointment">
-                      Appointment
+                    <Nav.Link className="navlink" href="booking">
+                      Booking
                     </Nav.Link>
                     <Button
                       style={{ fontSize: "16px" }}

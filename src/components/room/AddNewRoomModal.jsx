@@ -3,10 +3,10 @@ import { Form } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch } from "react-redux";
-import { saveRoom } from "../features/rooms/roomsSlice";
+import { saveRoom } from "../../features/rooms/roomsSlice";
 import { toast } from "react-toastify";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../firebase";
+import { storage } from "../../firebase";
 
 export default function AddNewRoomModal({ show, handleClose }) {
   const [title, setTitle] = useState("");

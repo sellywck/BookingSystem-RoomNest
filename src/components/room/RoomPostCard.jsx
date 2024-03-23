@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import { Image } from "react-bootstrap";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteRoom } from "../features/rooms/roomsSlice";
+import { deleteRoom } from "../../features/rooms/roomsSlice";
 // import { AuthContext } from "./AuthProvider";
 // import { useContext } from "react";
 
@@ -24,10 +24,9 @@ export default function RoomPostCard({
 
   const dispatch = useDispatch();
 
-
   const handleDelete = () => {
-    dispatch(deleteRoom(roomId))
-  }
+    dispatch(deleteRoom(roomId));
+  };
 
   return (
     <Card className="mb-4">
@@ -50,7 +49,9 @@ export default function RoomPostCard({
               <Button variant="primary" onClick={handleShow}>
                 Edit
               </Button>{" "}
-              <Button variant="danger" onClick={handleDelete}>Delete</Button>
+              <Button variant="danger" onClick={handleDelete}>
+                Delete
+              </Button>
             </>
           ) : (
             <>

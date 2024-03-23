@@ -1,5 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
-import RoomPostHome from "../components/RoomPostHome";
+import RoomPostHome from "../components/room/RoomPostHome";
 
 export default function HomePages() {
   return (
@@ -7,7 +7,7 @@ export default function HomePages() {
       <Container className="mainView">
         <Row>
           <Col>
-          <RoomPostHome/>
+            <RoomPostHome />
           </Col>
         </Row>
       </Container>
