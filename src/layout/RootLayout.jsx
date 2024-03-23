@@ -17,10 +17,11 @@ export default function RootLayout() {
   const auth = getAuth();
   const handleLogout = () => {
     auth.signOut();
+    localStorage.clear();
     navigate("/");
   };
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, identity } = useContext(AuthContext);
 
   return (
     <>
@@ -68,26 +69,31 @@ export default function RootLayout() {
                 <Nav.Link className="navlink" href="/">
                   Home
                 </Nav.Link>
-                <Nav.Link className="navlink" onClick={handleShowSignUp}>
-                  Sign Up
-                </Nav.Link>
-                <Nav.Link className="navlink" onClick={handleShowLogin}>
-                  Login
-                </Nav.Link>
-                <Nav.Link className="navlink" href="contact">
-                  Contact Us
-                </Nav.Link>
-                <Nav.Link className="navlink" href="appointment">
-                  Appointment
-                </Nav.Link>
-                {currentUser && (
-                  <Button
-                    style={{ fontSize: "16px" }}
-                    variant="danger"
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </Button>
+                {currentUser ? (
+                  <>
+                    <Nav.Link className="navlink" href="appointment">
+                      Appointment
+                    </Nav.Link>
+                    <Button
+                      style={{ fontSize: "16px" }}
+                      variant="danger"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Nav.Link className="navlink" onClick={handleShowSignUp}>
+                      Sign Up
+                    </Nav.Link>
+                    <Nav.Link className="navlink" onClick={handleShowLogin}>
+                      Login
+                    </Nav.Link>
+                    <Nav.Link className="navlink" href="contact">
+                      Contact Us
+                    </Nav.Link>
+                  </>
                 )}
               </Nav>
             </Offcanvas.Body>

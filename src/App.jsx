@@ -5,10 +5,13 @@ import AuthProvider from "./components/AuthProvider";
 import Appointment from "./pages/Appointment";
 import ContactPage from "./pages/ContactPage";
 import { ToastContainer } from "react-toastify";
+import { Provider } from "react-redux";
+import store from "./store";
 
 export default function App() {
   return (
     <AuthProvider>
+      <Provider store={store}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<RootLayout />}>
@@ -19,6 +22,7 @@ export default function App() {
         </Routes>
       </BrowserRouter>
       <ToastContainer/>
+      </Provider>
     </AuthProvider>
   );
 }

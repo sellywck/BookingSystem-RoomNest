@@ -1,66 +1,41 @@
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
-  // const [userLoggedIn, setUserLoggedIn] = useState(false)
+  const [identity, setIdentity] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // firebase authentication
   useEffect(() => {
     return auth.onAuthStateChanged((user) => {
       setCurrentUser(user);
       setLoading(false);
-      console.log(user)
     });
   }, []);
 
-  const value = { currentUser };
+  useEffect(() => {
+    handleIdentityUpdate();
+  }, [currentUser]);
+
+  function handleIdentityUpdate() {
+    const token = localStorage.getItem("jwt_token");
+    if (token) {
+      const decode = jwtDecode(token);
+      setIdentity(decode);
+    } else {
+      setIdentity(null);
+    }
+  }
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{ currentUser, identity, handleIdentityUpdate }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
 }
-
-// import { createContext, useEffect, useState } from "react"
-// import {auth}  from "../firebase";
-// import { onAuthStateChanged } from "firebase/auth";
-
-// export const AuthContext = createContext()
-
-// export default function AuthProvider({children}) {
-//   const [currentUser, setCurrentUser] = useState(null);
-//   const [userLoggedIn, setUserLoggedIn] = useState(false)
-//   const [loading, setLoading] = useState(true)
-//   const [isEmailUser, setIsEmailUser] = useState(false)
-
-//   useEffect(()=> {
-//     const unsubsribe = onAuthStateChanged(auth, initializeUser)
-//     return unsubsribe
-//   }, [])
-
-//   async function initializeUser (user){
-//     if (user) {
-//       setCurrentUser({...user});
-//       const isEmail = user.providerData.some(
-//         (provider) => provider.providerId === "password"
-//       );
-//       setIsEmailUser(isEmail)
-//       setUserLoggedIn(true)
-//     } else{
-//       setCurrentUser(null);
-//       setUserLoggedIn(false)
-//     }
-//     setLoading(false)
-//   }
-//   const value = {currentUser, userLoggedIn, isEmailUser, setCurrentUser}
-
-//   return (
-//     <AuthContext.Provider value={value}>
-//       {!loading && children}
-//     </AuthContext.Provider>
-//   )
-// }
