@@ -85,8 +85,9 @@ export default function UpdateRoomModal({
           <Form.Group className="mb-3" controlId="description">
             <Form.Label>Description</Form.Label>
             <Form.Control
-              type="text"
-              placeholder="Room with own bathroom "
+              as ="textarea"
+              rows={4}
+              placeholder={`1. Room with own bathroom\n2. Fully Furnished\n3. Rental Negotiable`}
               required
               value={newDescription}
               onChange={(e) => setNewDescription(e.target.value)}

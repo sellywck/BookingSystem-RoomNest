@@ -5,6 +5,7 @@ import AuthModal from "../components/userAuthentication/AuthModal";
 import { useContext, useState } from "react";
 import { getAuth } from "firebase/auth";
 import { AuthContext } from "../components/userAuthentication/AuthProvider";
+import Footer from "../components/Footer";
 
 export default function RootLayout() {
   const [modalShow, setModalShow] = useState(null);
@@ -102,6 +103,7 @@ export default function RootLayout() {
       </Navbar>
       <Outlet />
       <AuthModal show={modalShow} onHide={handleClose} />
+      <Footer/>
     </>
   );
 }

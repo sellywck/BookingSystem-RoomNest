@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../userAuthentication/AuthProvider";
 import { fetchRooms } from "../../features/rooms/roomsSlice";
-import AddNewRoomModal from "./AddNewRoomModal";
+import AddNewRoomModal from "./CreateRoomModal";
 
 export default function RoomPostHome() {
   const [show, setShow] = useState(false);
