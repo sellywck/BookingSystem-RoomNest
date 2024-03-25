@@ -17,8 +17,7 @@ const googleIcon =
   "https://cdn.pgimgs.com/hive-ui/static/v0.1.99/logo/google.svg";
 const facebookIcon =
   "https://cdn.pgimgs.com/hive-ui/static/v0.1.99/logo/facebook.svg";
-const BASE_URL =
-  "https://c35179b3-44c4-45df-a8e9-b8ebe482257d-00-ieq5cbuud5mv.spock.replit.dev";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function AuthModal({ show, onHide }) {
   const [email, setEmail] = useState("");
@@ -45,7 +44,7 @@ export default function AuthModal({ show, onHide }) {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
       console.log({res})
-      
+
       if (res.user) {
         const { uid, email } = res.user;
         const response = await axios.post(`${BASE_URL}/v1/signup`, {

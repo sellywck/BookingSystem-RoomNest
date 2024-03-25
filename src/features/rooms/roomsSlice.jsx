@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
 const BASE_URL =
-  "https://c35179b3-44c4-45df-a8e9-b8ebe482257d-00-ieq5cbuud5mv.spock.replit.dev";
+import.meta.env.VITE_BASE_URL;
 
 export const fetchRooms = createAsyncThunk("rooms/fetchRooms", async () => {
   const response = await fetch(`${BASE_URL}/v1/rooms`);
