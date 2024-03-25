@@ -44,6 +44,8 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
+      console.log({res})
+      
       if (res.user) {
         const { uid, email } = res.user;
         const response = await axios.post(`${BASE_URL}/v1/signup`, {
@@ -62,6 +64,7 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await signInWithEmailAndPassword(auth, email, password);
+      console.log({res})
       if (res.user) {
         const { uid, email } = res.user;
         const response = await axios.post(`${BASE_URL}/v1/login`, {
@@ -88,6 +91,7 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await signInWithPopup(auth, GoogleProvider);
+      console.log({res})
       if (res.user) {
         const { uid, email } = res.user;
         const response = await axios.post(`${BASE_URL}/v1/login/sso`, {
@@ -106,6 +110,7 @@ export default function AuthModal({ show, onHide }) {
     e.preventDefault();
     try {
       const res = await signInWithPopup(auth, FacebookProvider);
+      console.log({res})
       if (res.user) {
         const { uid, email } = res.user;
         const response = await axios.post(`${BASE_URL}/v1/login/sso`, {
